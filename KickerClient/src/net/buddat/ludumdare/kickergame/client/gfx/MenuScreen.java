@@ -7,9 +7,11 @@ import org.newdawn.slick.Color;
 import org.newdawn.slick.Font;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.font.effects.OutlineEffect;
 import org.newdawn.slick.util.FontUtils;
 
 public class MenuScreen implements Screen {
@@ -25,7 +27,8 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void render(GameContainer gc, Graphics g) {
-		g.setColor(Color.red);
+		g.setColor(Color.white);
+		g.fillRect(0, 0, Constants.WIDTH, Constants.HEIGHT);
 		
 		Utilities.renderText(mainFont, Constants.NAME, 775, 50, Utilities.ALIGN_RIGHT, Color.green);
 		playItem.render(gc);
@@ -41,11 +44,13 @@ public class MenuScreen implements Screen {
 			mainFont = new UnicodeFont("/data/SF Sports Night.ttf", 52, false, false);
 			mainFont.addAsciiGlyphs();
 			mainFont.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
+			mainFont.getEffects().add(new OutlineEffect(1, java.awt.Color.BLACK));
 			mainFont.loadGlyphs();
 			
-			optionsFont = new UnicodeFont("/data/SF Sports Night.ttf", 32, false, false);
+			optionsFont = new UnicodeFont("/data/SF Sports Night.ttf", 42, false, false);
 			optionsFont.addAsciiGlyphs();
 			optionsFont.getEffects().add(new ColorEffect(java.awt.Color.WHITE));
+			optionsFont.getEffects().add(new OutlineEffect(1, java.awt.Color.BLACK));
 			optionsFont.loadGlyphs();
 		} catch (SlickException e) {
 			e.printStackTrace();
@@ -59,6 +64,14 @@ public class MenuScreen implements Screen {
 
 	@Override
 	public void update(GameContainer gc, int delta) {
+		if (gc.getInput().isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+			if (playItem.isSelected(gc)) {
+				parent.changeScreen(parent.getPlayScreen());
+			}
+		}
+	}
+	
+	public void dispose() {
 		
 	}
 	

@@ -10,5 +10,7 @@ public interface Screen {
 	public void init(GameContainer gc);
 	
 	public void update(GameContainer gc, int delta);
+
+	public void dispose();
 	
 }

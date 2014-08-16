@@ -2,6 +2,7 @@ package net.buddat.ludumdare.kickergame.client;
 
 import net.buddat.ludumdare.kickergame.Constants;
 import net.buddat.ludumdare.kickergame.client.gfx.MenuScreen;
+import net.buddat.ludumdare.kickergame.client.gfx.PlayScreen;
 import net.buddat.ludumdare.kickergame.client.gfx.Screen;
 
 import org.newdawn.slick.AppGameContainer;
@@ -13,7 +14,7 @@ import org.newdawn.slick.SlickException;
 public class KickerGame extends BasicGame {
 	
 	private Screen currentScreen;
-	private Screen menuScreen;
+	private Screen menuScreen, playScreen;
 
 	public KickerGame(String title) {
 		super(title);
@@ -28,6 +29,9 @@ public class KickerGame extends BasicGame {
 	public void init(GameContainer gc) throws SlickException {
 		menuScreen = new MenuScreen(this);
 		menuScreen.init(gc);
+		
+		playScreen = new PlayScreen(this);
+		playScreen.init(gc);
 		
 		currentScreen = menuScreen;
 	}
@@ -47,6 +51,19 @@ public class KickerGame extends BasicGame {
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void changeScreen(Screen newScreen) {
+		currentScreen.dispose();
+		currentScreen = newScreen;
+	}
+	
+	public Screen getPlayScreen() {
+		return playScreen;
+	}
+	
+	public Screen getMenuScreen() {
+		return menuScreen;
 	}
 
 }
