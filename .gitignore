@@ -34,6 +34,7 @@ local.properties
 ## Intellij
 #################
 *.iml
+.idea/
 
 #################
 ## Visual Studio
@@ -220,3 +221,8 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 /upload_data
+
+#############
+## Leiningen
+#############
+lib/
