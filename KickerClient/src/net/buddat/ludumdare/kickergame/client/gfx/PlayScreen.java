@@ -1,5 +1,6 @@
 package net.buddat.ludumdare.kickergame.client.gfx;
 
+import net.buddat.ludumdare.kickergame.Constants;
 import net.buddat.ludumdare.kickergame.client.KickerGame;
 import net.buddat.ludumdare.kickergame.client.Scenario;
 
@@ -11,24 +12,30 @@ import org.newdawn.slick.SlickException;
 public class PlayScreen implements Screen {
 
 	private KickerGame parent;
-	
+
 	private Scenario currentScenario;
 	private Image testbg;
-	
+
 	public PlayScreen(KickerGame kickerGame) {
 		this.parent = kickerGame;
-		
+
 		currentScenario = new Scenario(0.1f, 0.9f);
 	}
 
 	@Override
 	public void render(GameContainer gc, Graphics g) {
-		int xPos = (int) (-800 + 800 * currentScenario.getKickingDistance());
-		xPos += (int) (-300 + 600 * currentScenario.getKickingPosition());
-		int yPos = (int) (-600 + 600 * currentScenario.getKickingDistance());
-		testbg.draw(xPos, yPos, 800 + (1600 - (int) (1600 * currentScenario.getKickingDistance())), 
-				600 + (1200 - (int) (1200 * currentScenario.getKickingDistance())));
-		System.out.println(xPos + "," + yPos);
+		int xPos = (int) (-Constants.WIDTH + Constants.WIDTH
+				* currentScenario.getKickingDistance());
+		xPos += (int) (-Constants.WIDTH * 0.4 + Constants.WIDTH * 0.8
+				* currentScenario.getKickingPosition());
+		int yPos = (int) (-Constants.HEIGHT + Constants.HEIGHT
+				* currentScenario.getKickingDistance());
+
+		testbg.draw(xPos, yPos,
+				Constants.WIDTH + (Constants.WIDTH * 2 - (int) (Constants.WIDTH * 2 
+						* currentScenario.getKickingDistance())),
+				Constants.HEIGHT + (Constants.HEIGHT * 2 - (int) (Constants.HEIGHT * 2 
+						* currentScenario.getKickingDistance())));
 	}
 
 	@Override
@@ -42,11 +49,11 @@ public class PlayScreen implements Screen {
 
 	@Override
 	public void update(GameContainer gc, int delta) {
-		//currentScenario.setKickingPosition(currentScenario.getKickingPosition() + 0.001f);
+
 	}
-	
+
 	public void dispose() {
-		
+
 	}
 
 }
