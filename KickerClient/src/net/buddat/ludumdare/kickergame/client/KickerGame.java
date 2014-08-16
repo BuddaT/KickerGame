@@ -1,6 +1,8 @@
 package net.buddat.ludumdare.kickergame.client;
 
 import net.buddat.ludumdare.kickergame.Constants;
+import net.buddat.ludumdare.kickergame.client.gfx.MenuScreen;
+import net.buddat.ludumdare.kickergame.client.gfx.Screen;
 
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
@@ -9,28 +11,30 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 
 public class KickerGame extends BasicGame {
+	
+	private Screen currentScreen;
+	private Screen menuScreen;
 
 	public KickerGame(String title) {
 		super(title);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	public void render(GameContainer arg0, Graphics arg1) throws SlickException {
-		// TODO Auto-generated method stub
-
+	public void render(GameContainer gc, Graphics g) throws SlickException {
+		currentScreen.render(gc, g);
 	}
 
 	@Override
-	public void init(GameContainer arg0) throws SlickException {
-		// TODO Auto-generated method stub
-
+	public void init(GameContainer gc) throws SlickException {
+		menuScreen = new MenuScreen(this);
+		menuScreen.init(gc);
+		
+		currentScreen = menuScreen;
 	}
 
 	@Override
-	public void update(GameContainer arg0, int arg1) throws SlickException {
-		// TODO Auto-generated method stub
-
+	public void update(GameContainer gc, int delta) throws SlickException {
+		currentScreen.update(gc, delta);
 	}
 
 	public static void main(String[] args) {
