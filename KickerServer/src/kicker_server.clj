@@ -28,7 +28,10 @@
   (receive-all ch
     #(let [msg %]
        (log/infof "Handling %s" msg)
-       (enqueue ch (str "Handle " msg)))))
+       (case (:type msg)
+         :SCORE (enqueue leaderboard msg)
+         :CHAT :no-op
+         (log/error "Unknown message type " (:type msg))))))
 
 (defn handler [ch client-info]
   (receive-all ch #(log/info (str "You said " %))))
