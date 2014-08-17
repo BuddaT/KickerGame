@@ -19,5 +19,6 @@
   (case type
     :CHAT chat-string
     :LEADERBOARD leaderboard
+    :SCORE score
     bare-type))
 (defcodec message (header message-type type-to-codec :type))
