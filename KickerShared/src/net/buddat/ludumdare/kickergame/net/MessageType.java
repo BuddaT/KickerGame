@@ -13,7 +13,19 @@ public enum MessageType
     /**
      * Chat text
      */
-    CHAT(0x10);
+    CHAT(0x10),
+    /**
+     * Score for a game
+     */
+    SCORE(0x20),
+    /**
+     * Server-client leaderboard information
+     */
+    LEADERBOARD(0x21),
+    /**
+     * Client-server request for a leaderboard
+     */
+    GET_LEADERBOARD(0x22);
 
     private static final Map<Integer, MessageType> ID_TO_TYPE;
     static {
