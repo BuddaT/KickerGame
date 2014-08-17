@@ -1,11 +1,14 @@
 (ns kicker-server
   (:use aleph.tcp
         gloss.core
-        lamina.core)
-  (:require [clojure.tools.logging :as log]))
+        lamina.core
+        net.buddat.ludumdare.kickergame.net.message)
+  (:require [clojure.tools.logging :as log]
+            [gloss.core.codecs :refer [identity-codec]])
+  (:import net.buddat.ludumdare.kickergame.net.MessageType
+           net.buddat.ludumdare.kickergame.Constants))
 
-(def DEFAULT_PORT 15772)
-(def DEFAULT_CHANNEL "pong-server")
+(def DEFAULT_CHANNEL "kicker-server")
 
 (defn echo-handler [ch client-info]
   (log/info "Handler for channel called")
@@ -18,8 +21,6 @@
 (defn handler [ch client-info]
   (receive-all ch #(log/info (str "You said " %))))
 
-;(defcodec kicker-codec (enum :int32 message-type))
-(defcodec kicker-codec (string :utf-8 :delimiters ["\r\n"]))
 (defn -main [& args]
   (log/info "Starting echo server process...")
-  (start-tcp-server handler {:port DEFAULT_PORT, :frame (string :utf-8 :delimiters ["\r\n"])}))
+  (start-tcp-server handler {:port Constants/DEFAULT_PORT, :frame message}))

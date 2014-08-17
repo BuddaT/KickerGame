@@ -226,3 +226,5 @@ pip-log.txt
 ## Leiningen
 #############
 lib/
+.lein-repl-history
+.nrepl-port
