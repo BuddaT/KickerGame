@@ -23,7 +23,7 @@ public class PlayScreen implements Screen {
 	private PowerGauge powerDial;
 
 	private enum State {
-		SETTING_UP, KICK_DIR, KICK_POW, ANIMATING
+		SETTING_UP, KICK_DIR, KICK_POW, ANIMATING, SCORING
 	};
 
 	private State currentState = State.SETTING_UP;
@@ -31,33 +31,22 @@ public class PlayScreen implements Screen {
 	public PlayScreen(KickerGame kickerGame) {
 		this.parent = kickerGame;
 
-		currentScenario = new Scenario(0.5f, 0.5f);
+		currentScenario = new Scenario(0.1f, 0.5f);
 		changeState(State.KICK_DIR);
 	}
 
 	@Override
 	public void render(GameContainer gc, Graphics g) {
-		int xBg = (int) (-Constants.WIDTH + Constants.WIDTH
-				* currentScenario.getKickingDistance());
-		xBg += (int) (-Constants.WIDTH * 0.4 + Constants.WIDTH * 0.8
-				* currentScenario.getKickingPosition());
-		int yBg = (int) (-Constants.HEIGHT + Constants.HEIGHT
-				* currentScenario.getKickingDistance());
+		float ratio = testbg.getWidth() / testbg.getHeight();
+		int yBg = (int) (-Constants.HEIGHT + Constants.HEIGHT * currentScenario.getKickingDistance());
+		int h = Constants.HEIGHT
+				+ (Constants.HEIGHT * 2 - (int) (Constants.HEIGHT * 2 * currentScenario.getKickingDistance()));
+		int w = (int) (h * ratio);
+		int xBg = -((w - Constants.WIDTH) / 2);
+		xBg += (int) (-Constants.WIDTH * 0.4 + Constants.WIDTH * 0.8 * currentScenario.getKickingPosition());
+		testbg.draw(xBg, yBg, w, h);
 
-		testbg.draw(xBg, yBg,
-				Constants.WIDTH + (Constants.WIDTH * 2 - (int) (Constants.WIDTH * 2 
-						* currentScenario.getKickingDistance())),
-				Constants.HEIGHT + (Constants.HEIGHT * 2 - (int) (Constants.HEIGHT * 2 
-						* currentScenario.getKickingDistance())));
-		
-		if (currentState != State.ANIMATING) {
-			int xBall = (int) (Constants.WIDTH / 2 + 50 - currentScenario
-					.getKickingPosition() * 100) - testball.getWidth();
-			int yBall = (int) (250 + currentScenario.getKickingDistance() * 200)
-					- testball.getHeight() / 2;
-			testball.draw(xBall, yBall,
-					0.5f + currentScenario.getKickingDistance() / 2);
-		}
+		currentScenario.getBallImage().render(gc, g);
 
 		if (currentState == State.KICK_DIR || currentState == State.KICK_POW) {
 			directionDial.render(g);
@@ -79,6 +68,7 @@ public class PlayScreen implements Screen {
 			e.printStackTrace();
 		}
 
+		currentScenario.getBallImage().setImage(testball);
 		directionDial = new DirectionGauge("Direction", 2, testGauge, testArrow);
 		powerDial = new PowerGauge("Power", 2);
 	}
@@ -88,23 +78,33 @@ public class PlayScreen implements Screen {
 		if (currentState == State.KICK_DIR) {
 			if (gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
 				directionDial.pause();
+				currentScenario.setAppliedDirection(directionDial.arrow.getRotation());
 				changeState(State.KICK_POW);
 			}
+
+			//currentScenario.setKickingPosition(currentScenario.getKickingPosition() - 0.01f);
 
 			if (!directionDial.isPaused())
 				directionDial.update(delta);
 		} else if (currentState == State.KICK_POW) {
 			if (gc.getInput().isKeyPressed(Input.KEY_SPACE)) {
 				powerDial.pause();
+				currentScenario.setAppliedPower(powerDial.percentageFull);
 				changeState(State.ANIMATING);
 			}
 
 			if (!powerDial.isPaused())
 				powerDial.update(delta);
+		} else if (currentState == State.ANIMATING) {
+			currentScenario.animateKick();
+
+			if (currentScenario.isCompleted()) {
+				changeState(State.SCORING);
+			}
 		}
 
 		if (gc.getInput().isKeyPressed(Input.KEY_ESCAPE)) {
-			directionDial.arrowDirection = 0;
+			directionDial.arrow.setRotation(0);
 			directionDial.paused = false;
 			powerDial.percentageFull = 0.0f;
 			powerDial.paused = false;
@@ -127,7 +127,6 @@ public class PlayScreen implements Screen {
 		boolean paused = false;
 
 		Image gauge, arrow;
-		float arrowDirection = 0;
 		boolean reverse = false;
 
 		private DirectionGauge(String title, int speed, Image dial, Image arrow) {
